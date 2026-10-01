@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#102A43">
+<title>SUS Employees ID Card Register Z13</title>
+<link rel="icon" href="logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <img src="logo.jpeg" alt="Logo" class="logo">
+  <div class="titles">
+    <h1>SUS Employees ID Card Register Z13</h1>
+    <p>Verify details &amp; upload photo</p>
+  </div>
+  <span id="status" class="pill">Loading…</span>
+</header>
+
+<main>
+  <section class="card" id="formCard">
+
+    <div class="field">
+      <label for="search">Employee Details <span class="hint">(search by code or name)</span></label>
+      <div class="combo" id="combo">
+        <svg class="ico" viewBox="0 0 24 24" width="20" height="20"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"/></svg>
+        <input id="search" type="text" placeholder="Type e.g. 200002 or PERAMAIYAN" autocomplete="off" disabled>
+        <button type="button" id="clearBtn" class="clear" aria-label="Clear" hidden>&times;</button>
+        <ul id="list" class="list" role="listbox" hidden></ul>
+      </div>
+      <div id="lastUpdated" class="meta" hidden></div>
+    </div>
+
+    <div id="details" class="details disabled">
+      <div class="grid">
+        <div class="field">
+          <label for="designation">Designation</label>
+          <input id="designation" type="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="zone">Zone</label>
+          <input id="zone" type="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="ward">Ward</label>
+          <input id="ward" type="text" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Photo <span class="hint">(passport size 35 &times; 45 mm)</span></label>
+        <div class="photoRow">
+          <div class="frame" id="frame">
+            <img id="preview" alt="" hidden>
+            <div id="noPhoto" class="ph">
+              <svg viewBox="0 0 24 24" width="40" height="40"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+              <span>No photo</span>
+            </div>
+          </div>
+          <div class="photoBtns">
+            <button type="button" id="camBtn" class="btn primary">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 8h3l2-3h6l2 3h3v11H4zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
+              Use Camera
+            </button>
+            <button type="button" id="galBtn" class="btn ghost">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 4h16v16H4zM4 16l5-5 4 4 3-3 4 4M9 9.5h.01"/></svg>
+              From Gallery
+            </button>
+            <button type="button" id="rmBtn" class="btn link" hidden>Remove new photo</button>
+            <input type="file" id="file" accept="image/*" hidden>
+            <p id="photoNote" class="note"></p>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" id="saveBtn" class="btn save" disabled>Submit &amp; Save</button>
+    </div>
+  </section>
+</main>
+
+<!-- Camera -->
+<div id="camModal" class="modal" hidden>
+  <div class="camBox">
+    <div class="camHead">
+      <strong>Take Photo</strong>
+      <button type="button" id="camClose" class="x" aria-label="Close">&times;</button>
+    </div>
+    <div class="viewfinder" id="vf">
+      <video id="video" autoplay playsinline muted></video>
+      <svg class="guide" viewBox="0 0 350 450" preserveAspectRatio="none">
+        <ellipse cx="175" cy="165" rx="78" ry="98" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10 8"/>
+        <path d="M45 450c6-85 62-120 130-120s124 35 130 120" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10 8"/>
+      </svg>
+    </div>
+    <label class="check">
+      <input type="checkbox" id="studio">
+      <span class="box"></span>
+      <span><b>Studio mode</b> &mdash; person photo against a white background<br><small>Stand in front of a white wall/screen. Fit the face in the oval.</small></span>
+    </label>
+    <div class="camBtns">
+      <button type="button" id="flipBtn" class="btn ghost">Flip</button>
+      <button type="button" id="snapBtn" class="btn primary big">Capture</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIN -->
+<div id="pinModal" class="modal" hidden>
+  <div class="pinBox">
+    <img src="logo.jpeg" alt="" width="48" height="48">
+    <h2>Enter access code</h2>
+    <input id="pinInput" type="password" inputmode="numeric" placeholder="Access code" autocomplete="off">
+    <p id="pinErr" class="err" hidden>Incorrect code</p>
+    <button type="button" id="pinBtn" class="btn primary">Continue</button>
+  </div>
+</div>
+
+<!-- Freeze overlay -->
+<div id="freeze" class="freeze" hidden>
+  <div class="freezeBox">
+    <div class="spinner"></div>
+    <strong>Saving…</strong>
+    <span>Please don&rsquo;t close or edit anything</span>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
